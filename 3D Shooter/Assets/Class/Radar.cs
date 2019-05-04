@@ -6,7 +6,7 @@ using UnityEngine;
 public class Radar : MonoBehaviour {
 
 
-	private Transform _playerPos; // Позиция главного героя
+	public Transform PlayerPos { get; private set; } // Позиция главного героя
 	private readonly float mapScale = 2;
 	public static List<RadarObject> RadarObjects = new List<RadarObject> ();
 
@@ -15,7 +15,8 @@ public class Radar : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		_playerPos = GameObject.FindGameObjectWithTag ("Player").transform;
+        PlayerPos = GameObject.FindGameObjectWithTag ("Player").transform;
+        
 	}
 
 	public static void RegisterRadarObject (GameObject o, Image i)
@@ -44,9 +45,9 @@ public class Radar : MonoBehaviour {
 	{
 		foreach (RadarObject radObject in RadarObjects) 
 		{
-			Vector3 radarPos = (radObject.Owner.transform.position - _playerPos.position);
-			float distToObject = Vector3.Distance (_playerPos.position, radObject.Owner.transform.position) * mapScale;
-			float deltay = Mathf.Atan2 (radarPos.x, radarPos.z) * Mathf.Rad2Deg - 270 - _playerPos.eulerAngles.y;
+			Vector3 radarPos = (radObject.Owner.transform.position - PlayerPos.position);
+			float distToObject = Vector3.Distance (PlayerPos.position, radObject.Owner.transform.position) * mapScale;
+			float deltay = Mathf.Atan2 (radarPos.x, radarPos.z) * Mathf.Rad2Deg - 270 - PlayerPos.eulerAngles.y;
 			radarPos.x = distToObject * Mathf.Cos (deltay * Mathf.Deg2Rad) * -1;
 			radarPos.z = distToObject * Mathf.Sin (deltay * Mathf.Deg2Rad);
 

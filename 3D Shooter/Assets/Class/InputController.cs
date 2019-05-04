@@ -12,19 +12,23 @@ namespace Geekbrains.Controller
 		private bool _isActiveFlashlight = false;
 		private bool _isSelectWeapons = false;
 		private int _indexWeapons = 0;
+        private KeyCode _savePlayer = KeyCode.P;
+        private KeyCode _loadPlayer = KeyCode.O;
 
-		private Weapons _weapons;
+        private Weapons _weapons;
         
 	
 
 
 		void Update ()
 		{
-			if (Input.GetKeyDown (KeyCode.F)) {
+            
+            if (Input.GetKeyDown (KeyCode.F)) {
 				_isActiveFlashlight = !_isActiveFlashlight;
 				if (_isActiveFlashlight) {
 					Main.Instance.GetFlashlightController.On ();
-				} else {
+                    Debug.Log("включил фонарь");
+                } else {
 					Main.Instance.GetFlashlightController.Off ();
 				}
 			}
@@ -59,14 +63,23 @@ namespace Geekbrains.Controller
                 _isSelectWeapons = true;
             }
 
-
+            if (Input.GetKeyDown(_savePlayer))
+            {
+                Debug.Log("сохраняю");
+                Main.Instance.SaveController.Save();
+            }
+            if (Input.GetKeyDown(_loadPlayer))
+            {
+                Debug.Log("загружаю");
+                Main.Instance.SaveController.Load();
+            }
 
 
             if (!_isSelectWeapons) {
 				Main.Instance.GetWeaponController.Off ();
 				return;
 			}
-
+            
             
 			if ((Main.Instance.GetObjectManager.GetWeaponsList [_indexWeapons]) && (Main.Instance.GetObjectManager.GetAmmunitionList [_indexWeapons])) {
 				// Передаем в контроллер стрельбы чем и из чего стрелять
@@ -74,9 +87,11 @@ namespace Geekbrains.Controller
 				Main.Instance.GetWeaponController.On (Main.Instance.GetObjectManager.GetWeaponsList [_indexWeapons], Main.Instance.GetObjectManager.GetAmmunitionList [_indexWeapons]);
 
 			}
-			//_isSelectWeapons = true; 
 
-		}
+            
+            //_isSelectWeapons = true; 
+
+        }
 
 		public int GetIndexWeapon //Возвращаем индекс выбранного оружия
 		{ 

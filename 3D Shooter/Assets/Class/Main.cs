@@ -14,8 +14,11 @@ namespace Geekbrains
 		private InputController _inputController;
 		private FlashlightController _flashlightController;
 		private MarkController _markController;
+        public SaveController SaveController { get; private set; }
+        public Transform Player { get; private set; }
 
-		public static Main Instance { get; private set; }
+
+        public static Main Instance { get; private set; }
 		
 		private WeaponController _weaponsController;
 		private ObjectManager _objectManager;
@@ -32,13 +35,23 @@ namespace Geekbrains
 
         private void Awake()
         {
+            //ScreenCapture.CaptureScreenshot(Application.dataPath+"/map.png");
             _objectManager = GetComponent<ObjectManager>();
+            Player = GameObject.FindGameObjectWithTag("Player").transform;
+            SaveController = new SaveController();
         }
         void Start ()
 		{
 			Instance = this;
 
-			_controllersGameObject = new GameObject{ name = "Controllers" };
+            
+   
+
+
+
+            _controllersGameObject = new GameObject{ name = "Controllers" };
+
+           
            
             _inputController = _controllersGameObject.AddComponent<InputController>();
         
