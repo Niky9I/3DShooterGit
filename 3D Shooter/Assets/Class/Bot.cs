@@ -57,7 +57,7 @@ namespace Geekbrains
 			foreach (var tempWayPoint in tempWayPoints) 
 			{
 				_wayPoints.Add (tempWayPoint.transform.position);
-				print (_wayPoints);
+				//print (_wayPoints);
 			}
 			//находим игрока
 			//Target=Main.Instance.GetBotController.Init();

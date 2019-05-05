@@ -33,8 +33,8 @@ namespace Geekbrains
             //rect.localScale = new Vector3(scale, scale, 1);
             
             rect.localEulerAngles = _tempRot;
-            _tempPos.x = (-pos.x*2-60);
-            _tempPos.y = (-pos.z*2+15);
+            _tempPos.x = (-pos.x);
+            _tempPos.y = (-pos.z);
 
             rect.localPosition = _tempPos;
 

@@ -22,7 +22,7 @@ namespace Geekbrains.Controller
             {
                 i.IsVisible = false;
             }
-            UIInterface.WeaponUI.ShowData(SelecteWeapons.Clip.CountAmmunition, SelecteWeapons.CountClip);
+            //UIInterface.WeaponUI.ShowData(SelecteWeapons.Clip.CountAmmunition, SelecteWeapons.CountClip);
         }
         public void Update ()
 		{

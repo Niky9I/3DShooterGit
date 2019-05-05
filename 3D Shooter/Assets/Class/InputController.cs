@@ -83,7 +83,7 @@ namespace Geekbrains.Controller
             
 			if ((Main.Instance.GetObjectManager.GetWeaponsList [_indexWeapons]) && (Main.Instance.GetObjectManager.GetAmmunitionList [_indexWeapons])) {
 				// Передаем в контроллер стрельбы чем и из чего стрелять
-				print (_indexWeapons);
+				
 				Main.Instance.GetWeaponController.On (Main.Instance.GetObjectManager.GetWeaponsList [_indexWeapons], Main.Instance.GetObjectManager.GetAmmunitionList [_indexWeapons]);
 
 			}
