@@ -31,10 +31,10 @@ namespace Geekbrains
 				}
 			}
 		}
-		public void ApplyDamage (float damage)
+		public void SetDamage (InfoCollision info)
 		{
 			if (_hp>0) //если  жизний больше 0, получаем урон
-				_hp-=damage;
+				_hp-=info.Damage;
 			if (_hp <= 0) 
 			{
 				_hp = 0;

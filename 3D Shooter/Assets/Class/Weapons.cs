@@ -14,14 +14,14 @@ namespace Geekbrains
         public Ammunition Ammunition;
         public Clip Clip;
 
-        protected AmmunitionType[] ammunitionType = new AmmunitionType[] { AmmunitionType.Bullet };
+        //protected AmmunitionType[] ammunitionType = new AmmunitionType[] { AmmunitionType.Bullet };
 
 
 		#region Serialize Varible
 		//Позиция из которой будут вылетать снаряды
 		[SerializeField] protected Transform _gun;
 		//Сила выстрела
-		[SerializeField] protected float _force;
+		[SerializeField] protected float _force=100;
 		//Время задержки меджу выстрелами
 		[SerializeField] protected float _rechargeTime;
         private Queue<Clip> _clips = new Queue<Clip>();
@@ -48,7 +48,7 @@ namespace Geekbrains
 
         #region Abstract Function
         //Функция для вызова выстрела, обязательна во всех дочерних классах
-        public abstract void Fire(Ammunition ammunition);
+        public abstract void Fire();
 		#endregion
 	
 		protected virtual void Update()
@@ -58,11 +58,13 @@ namespace Geekbrains
 			
 			_recharge.Update();
 
-			// Производим подсчеты времени
-			if (_recharge.IsEvent()) // Если закончили отсчет, разрешаем стрелять
-				_fire = true;
-							
-		}
+            // Производим подсчеты времени
+            if (_recharge.IsEvent())
+            { // Если закончили отсчет, разрешаем стрелять
+                _fire = true;
+               // Debug.Log("Можно стрелять");
+            }
+        }
         protected void AddClip(Clip clip)
         {
             _clips.Enqueue(clip);

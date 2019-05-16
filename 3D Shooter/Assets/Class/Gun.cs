@@ -3,31 +3,34 @@ using UnityEngine;
 
 namespace Geekbrains
 {
-	public class Gun : Weapons
+	public sealed class Gun : Weapons
 	{
-		public override void Fire(Ammunition ammunition)
+		public override void Fire()
 		{
-			
+            //Debug.Log("Пытаюсь стрелять");
 
-			if (_fire) //Если можно стрелять
+            if (_fire) //Если можно стрелять
 			{
-				
-				if (ammunition) 
+                //Debug.Log("Моежно стрелять");
+                if (Clip.CountAmmunition>0) 
 				{
-					//Создаем снаряд
+                    if (Ammunition)
+                    {
+                        //Создаем снаряд
 
-					Bullet tempbullet =Instantiate (ammunition, _gun.position, _gun.rotation) as Bullet;
-					// Всегда проверяйте существование объекта, прежде чем к нему обратиться!
-					if (tempbullet) 
-					{
-
-						tempbullet.GetRigidbody.AddForce(_gun.forward*_force); 	// Добавляем ускорение к пуле
-						tempbullet.Name="Bullet"; // Задаем имя пуле
+                        var tempbullet = Instantiate(Ammunition, _gun.position, _gun.rotation);
+                        // Всегда проверяйте существование объекта, прежде чем к нему обратиться!
+                       
+                        tempbullet.AddForce(_gun.forward * _force);     // Добавляем ускорение к пуле
+                        _fire = false; // Сообщаем, что произошел выстрел
+                        //tempbullet.Name = "Bullet"; // Задаем имя пуле
+                       
                         Clip.CountAmmunition--;
-						_fire=false; // Сообщаем, что произошел выстрел
-						_recharge.Start(_rechargeTime); // Запускаем таймер
+                        
+                        _recharge.Start(_rechargeTime); // Запускаем таймер
 
-					}
+                        
+                    }
 				}
 			}
 				

@@ -6,7 +6,7 @@ namespace Geekbrains.Interface
 
 	public interface ISetDamage
 	{
-		void ApplyDamage (float damage);
+		void SetDamage (InfoCollision info);
 
 	
 	}

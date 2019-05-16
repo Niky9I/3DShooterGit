@@ -1,5 +1,4 @@
 ﻿
-
 namespace Geekbrains
 {
     public enum MouseScrollWheel

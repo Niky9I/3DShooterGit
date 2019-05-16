@@ -10,20 +10,20 @@ namespace Geekbrains.Controller
 		private Weapons _weapons;
 		private Ammunition _ammunition;
 		private int _mouseButton = (int) Main.MouseButton.LeftButton;
-		public Weapons SelecteWeapons // Оружие, которое сейчас выбрано
-		{get {return _weapons;}}
+		
+        
 
 		private int _index;
 
-        public void Awake()
-        {
-            Weapons[] _allWeapons = FindObjectsOfType<Weapons>();
-            foreach (var i in _allWeapons)
-            {
-                i.IsVisible = false;
-            }
-            //UIInterface.WeaponUI.ShowData(SelecteWeapons.Clip.CountAmmunition, SelecteWeapons.CountClip);
-        }
+        //public void Awake()
+        //{
+        //    Weapons[] _allWeapons = FindObjectsOfType<Weapons>();
+        //    foreach (var i in _allWeapons)
+        //    {
+        //        i.IsVisible = false;
+        //    }
+        //    //UIInterface.WeaponUI.ShowData(SelecteWeapons.Clip.CountAmmunition, SelecteWeapons.CountClip);
+        //}
         public void Update ()
 		{
 			//print ("пробую стрелять");
@@ -31,38 +31,43 @@ namespace Geekbrains.Controller
 				return;
 			if (Input.GetMouseButton(_mouseButton)) // Если зажата левая кнопка мыши
 			{
-				
-				_ammunition=Main.Instance.GetObjectManager.GetAmmunitionList [Main.Instance.GetInputController.GetIndexWeapon];
 
-				SelecteWeapons.Fire (_ammunition);
-                UIInterface.WeaponUI.ShowData(SelecteWeapons.Clip.CountAmmunition, SelecteWeapons.CountClip);
+                _weapons.Fire ();
+             
+                UIInterface.WeaponUI.ShowData(_weapons.Clip.CountAmmunition, _weapons.CountClip);
 
             }
 
 		}
-		public virtual void On (Weapons weapons, Ammunition ammunition)
+		public virtual void On (BaseObjectScene weapons)
 		{
 			if (Enabled)
 				return;
-			base.On ();
-			_weapons = weapons;
-			_weapons.IsVisible = true;
-		}
+			base.On (weapons);
+            _weapons = weapons as Weapons;
+            
+            _weapons.IsVisible = true;
+            UIInterface.WeaponUI.SetActive(true);
+            UIInterface.WeaponUI.ShowData(_weapons.Clip.CountAmmunition, _weapons.CountClip);
+           
+        }
 
 		public override void Off ()
 		{
 			if (!Enabled)
 				return;
 			base.Off ();
-		
-			_weapons.IsVisible = false;
-		}
+           
+            _weapons.IsVisible = false;
+            _weapons = null;
+            UIInterface.WeaponUI.SetActive(false);
+        }
 
         public void ReloadClip()
         {
-            if (SelecteWeapons == null) return;
-            SelecteWeapons.ReloadClip();
-            UIInterface.WeaponUI.ShowData(SelecteWeapons.Clip.CountAmmunition, SelecteWeapons.CountClip);
+            if (_weapons == null) return;
+            _weapons.ReloadClip();
+            UIInterface.WeaponUI.ShowData(_weapons.Clip.CountAmmunition, _weapons.CountClip);
         }
     }
 }

@@ -44,23 +44,27 @@ namespace Geekbrains.Controller
 
             if (Input.GetKeyDown (KeyCode.Alpha1)) {
 
-				_indexWeapons = 0;
-
-               
-                _isSelectWeapons = true;
+                Debug.Log("Выбрал Шотган");
+                SelectWeapon(0);
+              
+                //_indexWeapons = 0;
+                               
+                //_isSelectWeapons = true;
 			}
 			if (Input.GetKeyDown (KeyCode.Alpha0)) 
 			{
-          
-              
-                _isSelectWeapons = false;
+                Main.Instance.GetWeaponController.Off();
+
+                //_isSelectWeapons = false;
                 
 			}
             if (Input.GetKeyDown(KeyCode.Alpha2))
             {
-                _indexWeapons = 1;
+                Debug.Log("Выбрал Автомат");
+                SelectWeapon(1);
+               // _indexWeapons = 1;
                 
-                _isSelectWeapons = true;
+                //_isSelectWeapons = true;
             }
 
             if (Input.GetKeyDown(_savePlayer))
@@ -75,20 +79,29 @@ namespace Geekbrains.Controller
             }
 
 
-            if (!_isSelectWeapons) {
-				Main.Instance.GetWeaponController.Off ();
-				return;
-			}
+   //         if (!_isSelectWeapons) {
+			//	Main.Instance.GetWeaponController.Off ();
+			//	return;
+			//}
             
             
-			if ((Main.Instance.GetObjectManager.GetWeaponsList [_indexWeapons]) && (Main.Instance.GetObjectManager.GetAmmunitionList [_indexWeapons])) {
+			if (Main.Instance.GetObjectManager.GetWeaponsList [_indexWeapons]) {
 				// Передаем в контроллер стрельбы чем и из чего стрелять
 				
-				Main.Instance.GetWeaponController.On (Main.Instance.GetObjectManager.GetWeaponsList [_indexWeapons], Main.Instance.GetObjectManager.GetAmmunitionList [_indexWeapons]);
+				Main.Instance.GetWeaponController.On (Main.Instance.GetObjectManager.GetWeaponsList [_indexWeapons]);
 
 			}
 
-            
+            if (Input.GetAxis("Mouse ScrollWheel") > 0)
+            {
+                MouseScroll(MouseScrollWheel.Up);
+            }
+            if (Input.GetAxis("Mouse ScrollWheel") < 0)
+            {
+                MouseScroll(MouseScrollWheel.Down);
+            }
+
+
             //_isSelectWeapons = true; 
 
         }
@@ -98,7 +111,26 @@ namespace Geekbrains.Controller
 			get { return _indexWeapons; }
 
 		}
-       
+        private void SelectWeapon(int value)
+        {
+            var tempWeapon = Main.Instance.GetObjectManager.SelectWeapon(value);
+            SelectWeapon(tempWeapon);
+        }
 
-	}
+        private void MouseScroll(MouseScrollWheel value)
+        {
+            var tempWeapon = Main.Instance.GetObjectManager.SelectWeapon(value);
+            SelectWeapon(tempWeapon);
+        }
+        private void SelectWeapon(Weapons weapon)
+        {
+            Main.Instance.GetWeaponController.Off();
+            if (weapon != null)
+            {
+                Main.Instance.GetWeaponController.On(weapon);
+                Debug.Log("Передал оружие");
+            }
+        }
+
+    }
 }
