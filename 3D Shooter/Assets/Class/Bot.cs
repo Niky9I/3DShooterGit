@@ -16,7 +16,7 @@ namespace Geekbrains
 		// Время ожидания на контрольной точке
 		private readonly float _timeWait=3;
 		private readonly float _activeDistance=50;
-		private readonly float _activeAngle=70;
+		private readonly float _activeAngle=50;
 		private readonly float _stoppingDistance = 10;
 		#endregion
 
@@ -121,6 +121,7 @@ namespace Geekbrains
 
                 agent.stoppingDistance = _curStoppingDistance;
 				agent.SetDestination (Target.position);
+                //Debug.Log("Бот стреляет");
 				_weapons.Fire ();
 
 			}
@@ -130,7 +131,7 @@ namespace Geekbrains
 		{
 			if (Vector3.Distance (_wayPoints [_wayCount], transform.position) <= _stoppingDistance) 
 			{
-                if (_wayCount >= _wayPoints.Count-1)
+                if (_wayCount >= _wayPoints.Count-1d)
                     _wayCount=0;
 				_wayCount++;
                 

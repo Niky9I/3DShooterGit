@@ -10,7 +10,7 @@ namespace Geekbrains
 {
     [RequireComponent(typeof (CharacterController))]
     [RequireComponent(typeof (AudioSource))]
-    public class FirstPersonController : MonoBehaviour,ISetHealth
+    public class FirstPersonController : MonoBehaviour,ISetHealth, ISetDamage
     {
         [SerializeField] private bool m_IsWalking;
         [SerializeField] private float m_WalkSpeed;
@@ -30,6 +30,7 @@ namespace Geekbrains
         [SerializeField] private AudioClip m_JumpSound;           // the sound played when character leaves the ground.
         [SerializeField] private AudioClip m_LandSound;
         [SerializeField] private float _hp=100;  // the sound played when character touches back on ground.
+        private bool _gameover = false;
 
         private Camera m_Camera;
         private bool m_Jump;
@@ -273,5 +274,27 @@ namespace Geekbrains
                 }
             }
         }
+        
+        public void SetDamage(InfoCollision info)
+        {
+            if (_hp > 0)
+            {
+                _hp -= info.Damage;
+            }
+            if (_hp <= 0)
+            {
+                _hp = 0;
+                _gameover = true;
+
+            }
+        }
+        void OnGUI()
+        {
+            if (_gameover)
+            {
+                GUI.Button(new Rect(250, 100, 200, 100), "GAME OVER!");
+                Application.Quit();
+            }
+}
     }
 }

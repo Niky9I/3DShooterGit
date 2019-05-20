@@ -15,15 +15,7 @@ namespace Geekbrains.Controller
 
 		private int _index;
 
-        //public void Awake()
-        //{
-        //    Weapons[] _allWeapons = FindObjectsOfType<Weapons>();
-        //    foreach (var i in _allWeapons)
-        //    {
-        //        i.IsVisible = false;
-        //    }
-        //    //UIInterface.WeaponUI.ShowData(SelecteWeapons.Clip.CountAmmunition, SelecteWeapons.CountClip);
-        //}
+     
         public void Update ()
 		{
 			//print ("пробую стрелять");

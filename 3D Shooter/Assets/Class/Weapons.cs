@@ -10,9 +10,11 @@ namespace Geekbrains
 	public abstract class Weapons : BaseObjectScene 
 	{
         private int _maxAmmunition = 30;
-        private int _countClip = 5;
+        private int _countClip = 1;
         public Ammunition Ammunition;
         public Clip Clip;
+        
+
 
         //protected AmmunitionType[] ammunitionType = new AmmunitionType[] { AmmunitionType.Bullet };
 
@@ -43,6 +45,9 @@ namespace Geekbrains
             }
 
             ReloadClip();
+            MagazineAK.AddNewClipEvent += AddClipInGame;
+
+
         }
 
 
@@ -65,9 +70,14 @@ namespace Geekbrains
                // Debug.Log("Можно стрелять");
             }
         }
-        protected void AddClip(Clip clip)
+        public void AddClip(Clip clip)
         {
             _clips.Enqueue(clip);
+        }
+
+        public void AddClipInGame()
+        {
+            AddClip(new Clip { CountAmmunition = _maxAmmunition });
         }
 
         public void ReloadClip()
