@@ -5,11 +5,24 @@ using Geekbrains.Controller;
 using Geekbrains.Helper;
 
 
+
 namespace Geekbrains
 {
 
-	public sealed class Main : MonoBehaviour
-	{
+    public sealed class Main : Singleton<Main>
+
+
+    {
+        [System.Serializable]
+        public struct SceneDate
+        {
+            public SceneField MainMenu;
+            public SceneField Game;
+        }
+
+        public SceneDate Scenes;
+
+
 		private GameObject _controllersGameObject;
 		private InputController _inputController;
 		private FlashlightController _flashlightController;
@@ -32,9 +45,13 @@ namespace Geekbrains
 			CenterButton
 		}
 
+        protected Main() { }
+
+
 
         private void Awake()
         {
+            DontDestroyOnLoad(gameObject);
             //ScreenCapture.CaptureScreenshot(Application.dataPath+"/map.png");
             _objectManager = GetComponent<ObjectManager>();
             Player = GameObject.FindGameObjectWithTag("Player").transform;
