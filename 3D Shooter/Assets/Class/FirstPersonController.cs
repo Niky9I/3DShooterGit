@@ -1,16 +1,14 @@
 using System;
 using UnityEngine;
-using UnityStandardAssets.Characters.FirstPerson;
 using UnityStandardAssets.CrossPlatformInput;
 using UnityStandardAssets.Utility;
 using Random = UnityEngine.Random;
-using Geekbrains.Interface;
 
-namespace Geekbrains
+namespace UnityStandardAssets.Characters.FirstPerson
 {
     [RequireComponent(typeof (CharacterController))]
     [RequireComponent(typeof (AudioSource))]
-    public class FirstPersonController : MonoBehaviour,ISetHealth
+    public class FirstPersonController : MonoBehaviour
     {
         [SerializeField] private bool m_IsWalking;
         [SerializeField] private float m_WalkSpeed;
@@ -28,8 +26,7 @@ namespace Geekbrains
         [SerializeField] private float m_StepInterval;
         [SerializeField] private AudioClip[] m_FootstepSounds;    // an array of footstep sounds that will be randomly selected from.
         [SerializeField] private AudioClip m_JumpSound;           // the sound played when character leaves the ground.
-        [SerializeField] private AudioClip m_LandSound;
-        [SerializeField] private float _hp=100;  // the sound played when character touches back on ground.
+        [SerializeField] private AudioClip m_LandSound;           // the sound played when character touches back on ground.
 
         private Camera m_Camera;
         private bool m_Jump;
@@ -44,8 +41,9 @@ namespace Geekbrains
         private float m_NextStep;
         private bool m_Jumping;
         private AudioSource m_AudioSource;
+        private Animator m_animator;
 
-        // Use this for initialization
+        // Use this for initializationˆÛ
         private void Start()
         {
             m_CharacterController = GetComponent<CharacterController>();
@@ -58,15 +56,36 @@ namespace Geekbrains
             m_Jumping = false;
             m_AudioSource = GetComponent<AudioSource>();
 			m_MouseLook.Init(transform , m_Camera.transform);
-            //UIInterface.PlayerUI.ShowHealth(_hp);
+            m_animator = GetComponent<Animator>();
         }
 
+
+		bool m_IsCaptured;
+		void OnEnable() {
+			Cursor.lockState = CursorLockMode.Locked;
+			Cursor.visible = false;
+			m_IsCaptured = true;
+		}
+
+		void OnDisable() {
+			Cursor.lockState = CursorLockMode.None;
+			Cursor.visible = true;
+			m_IsCaptured = false;
+		}
 
         // Update is called once per frame
         private void Update()
         {
-            RotateView();
-            // the jump state needs to read here to make sure it is not missed
+			if(!m_IsCaptured && Input.GetMouseButtonDown(0))
+				OnEnable();
+
+			if(m_IsCaptured && Input.GetKeyDown(KeyCode.Escape))
+				OnDisable();
+
+			if(m_IsCaptured)
+	            RotateView();
+ 
+			// the jump state needs to read here to make sure it is not missed
             if (!m_Jump)
             {
                 m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
@@ -85,7 +104,7 @@ namespace Geekbrains
             }
 
             m_PreviouslyGrounded = m_CharacterController.isGrounded;
-            UIInterface.PlayerUI.ShowHealth(_hp);
+
         }
 
 
@@ -107,11 +126,14 @@ namespace Geekbrains
             // get a normal for the surface that is being touched to move along it
             RaycastHit hitInfo;
             Physics.SphereCast(transform.position, m_CharacterController.radius, Vector3.down, out hitInfo,
-                               m_CharacterController.height/2f, Physics.AllLayers, QueryTriggerInteraction.Ignore);
+                               m_CharacterController.height/2f);
             desiredMove = Vector3.ProjectOnPlane(desiredMove, hitInfo.normal).normalized;
 
             m_MoveDir.x = desiredMove.x*speed;
             m_MoveDir.z = desiredMove.z*speed;
+
+            //if (m_IsWalking) m_animator.SetFloat("Speed", m_RunSpeed);
+            //if (!m_IsWalking) m_animator.SetFloat("Speed", 0);
 
 
             if (m_CharacterController.isGrounded)
@@ -128,14 +150,12 @@ namespace Geekbrains
             }
             else
             {
-                m_MoveDir += Physics.gravity*m_GravityMultiplier*Time.fixedDeltaTime;
+                m_MoveDir += Physics.gravity * m_GravityMultiplier * Time.fixedDeltaTime;
             }
             m_CollisionFlags = m_CharacterController.Move(m_MoveDir*Time.fixedDeltaTime);
 
             ProgressStepCycle(speed);
             UpdateCameraPosition(speed);
-
-            m_MouseLook.UpdateCursorLock();
         }
 
 
@@ -212,6 +232,9 @@ namespace Geekbrains
             float horizontal = CrossPlatformInputManager.GetAxis("Horizontal");
             float vertical = CrossPlatformInputManager.GetAxis("Vertical");
 
+            //if (m_IsWalking) m_animator.SetFloat("Speed", m_RunSpeed);
+            //if (!m_IsWalking) m_animator.SetFloat("Speed", 0);
+
             bool waswalking = m_IsWalking;
 
 #if !MOBILE_INPUT
@@ -259,19 +282,6 @@ namespace Geekbrains
                 return;
             }
             body.AddForceAtPosition(m_CharacterController.velocity*0.1f, hit.point, ForceMode.Impulse);
-        }
-        public void ApplyMedKit(float kit)
-        {
-            print("Œ«ƒŒ–¿¬À»¬¿≈Ã—ﬂ!");
-
-            if (_hp < 100)
-            {
-                _hp += kit;
-                if (_hp > 100)
-                {
-                    _hp = 100;
-                }
-            }
         }
     }
 }

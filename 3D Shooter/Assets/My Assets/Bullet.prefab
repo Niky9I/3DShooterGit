@@ -206,7 +206,8 @@ MonoBehaviour:
   _mass: 0.01
   projectorWall: {fileID: 6338850574729732997, guid: d029d8f1d4578844685fdc5196b4da5e,
     type: 3}
-  projectorEnemy: {fileID: 0}
+  projectorEnemy: {fileID: 6338850574729732997, guid: 4527da5ca3d4e194a824382a60dbc4a0,
+    type: 3}
   maxProjectors: 50
 --- !u!54 &54862593985396142
 Rigidbody:

@@ -16,8 +16,8 @@ namespace Geekbrains
 		// Время ожидания на контрольной точке
 		private readonly float _timeWait=3;
 		private readonly float _activeDistance=50;
-		private readonly float _activeAngle=70;
-		private readonly float _stoppingDistance = 5;
+		private readonly float _activeAngle=50;
+		private readonly float _stoppingDistance = 10;
 		#endregion
 
 		//Список контрольных точек
@@ -47,7 +47,12 @@ namespace Geekbrains
 			_isDeath = false;
 			agent = GetComponent<NavMeshAgent> ();
 			_weapons = GetTransform.Find ("Gun").GetComponent<Weapons> ();
-		}
+            var bodyBot = GetComponentInChildren<BodyBot>();
+            if (bodyBot != null) bodyBot.OnApplyDamageChange += SetDamage;
+
+            var headBot = GetComponentInChildren<HeadBot>();
+            if (headBot != null) headBot.OnApplyDamageChange += SetDamage;
+        }
 
 		void Start()
 		{
@@ -70,12 +75,12 @@ namespace Geekbrains
 		// Update is called once per frame
 		void Update ()
 		{
-
+            float _curStoppingDistance;
 			//print (_target.name);
 			// Если умерли или нет цели, то не производим расчеты
 			if (_isDeath || !Target) 
 			{
-				//print ("я сдох");
+				print ("я сдох");
 				return;
 			}
 
@@ -94,14 +99,15 @@ namespace Geekbrains
 
 
 			if (_wayPoints.Count >= 2 && !_isTarget) {
-				
-				//print(_wayCount);
-				agent.stoppingDistance = 0;
+                _curStoppingDistance = 0;
+                //print(_wayCount);
+                agent.stoppingDistance = _curStoppingDistance;
 				agent.SetDestination (_wayPoints [_wayCount]);
 				ChangePoint();
 				//Если некуда идти
 				if (!agent.hasPath) {
-					// Отсчитываем время
+                    // Отсчитываем время
+                    Debug.Log("некуда идти");
 					_curTimeout += Time.deltaTime;
 					if (_curTimeout > _timeWait) {
 						_curTimeout = 0;
@@ -111,10 +117,12 @@ namespace Geekbrains
 			} 
 			else if (_wayPoints.Count == 0 || _isTarget) 
 			{
-				
-				agent.stoppingDistance = _stoppingDistance;
+                _curStoppingDistance = _stoppingDistance;
+
+                agent.stoppingDistance = _curStoppingDistance;
 				agent.SetDestination (Target.position);
-				_weapons.Fire (Main.Instance.GetObjectManager.GetAmmunitionList [0]);
+                //Debug.Log("Бот стреляет");
+				_weapons.Fire ();
 
 			}
 		}
@@ -123,8 +131,10 @@ namespace Geekbrains
 		{
 			if (Vector3.Distance (_wayPoints [_wayCount], transform.position) <= _stoppingDistance) 
 			{
-				print (Vector3.Distance (Target.position, transform.position));
+                if (_wayCount >= _wayPoints.Count-1d)
+                    _wayCount=0;
 				_wayCount++;
+                
 			}
 		}
 	 
@@ -148,11 +158,11 @@ namespace Geekbrains
 				_wayCount = 0;
 		}
 		
-		public void ApplyDamage(float damage)
+		public void SetDamage(InfoCollision info)
 		{
 			if (_hp > 0) 
 			{
-				_hp -= damage;
+				_hp -= info.Damage;
 			}
 			if (_hp <= 0) 
 			{

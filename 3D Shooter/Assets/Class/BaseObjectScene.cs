@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 using System.Collections;
 
 namespace Geekbrains
 {
 	// Базовый класс всех объектов на сцене
-	public abstract class BaseObjectScene : MonoBehaviour 
-	{
+	public abstract class BaseObjectScene : MonoBehaviour
+    {
 		protected int _layer;
 		protected Color _color;
 		protected Material _material;
@@ -30,11 +31,13 @@ namespace Geekbrains
 			_rigidbody = _instanceObject.GetComponent<Rigidbody> ();
 			_myTransform = _instanceObject.transform;
 		}
-		#endregion
+        #endregion
 
-		#region Property
-		// Имя объекта
-		public string Name
+      
+
+        #region Property
+        // Имя объекта
+        public string Name
 		{
 			get {return _name; }
 			set
@@ -130,8 +133,10 @@ namespace Geekbrains
 			}
 		}
 
-		// Получить физику объекта
-		public Rigidbody GetRigidbody
+        // Получить физику объекта
+        
+
+        public Rigidbody GetRigidbody
 		{
 			get { return _rigidbody; }
 
@@ -150,11 +155,17 @@ namespace Geekbrains
 			set
 			{ 
 				_isVisible = value;
-				if (_instanceObject.GetComponent<MeshRenderer> ())
-					_instanceObject.GetComponent<MeshRenderer> ().enabled = _isVisible;
-				if (_instanceObject.GetComponent<SkinnedMeshRenderer> ())
-					_instanceObject.GetComponent<SkinnedMeshRenderer> ().enabled = _isVisible;
-				
+                var tempRenderer = GetComponent<MeshRenderer>();
+                if (tempRenderer)
+                    tempRenderer.enabled = _isVisible;
+                if (transform.childCount <= 0) return;
+                foreach (Transform d in transform)
+                {
+                    tempRenderer = d.gameObject.GetComponent<MeshRenderer>();
+                    if (tempRenderer)
+                        tempRenderer.enabled = _isVisible;
+                }
+   
 			}
 
 		}

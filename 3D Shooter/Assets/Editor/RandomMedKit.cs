@@ -32,7 +32,7 @@ namespace Geekbrains.Editor
                     Transform root = new GameObject("Root").transform;
                     for (int i = 0; i < _countObject; i++)
                     {
-                        Vector3 pos = new Vector3(Random.Range(-_radius, _radius),1, Random.Range(-_radius, _radius));
+                        Vector3 pos = new Vector3(Random.Range(-_radius, _radius),0, Random.Range(-_radius, _radius));
                         GameObject temp = Instantiate(_medKit, pos, Quaternion.identity) as GameObject;
                         temp.name = _nameObject + "(" + i + ")";
                         temp.transform.parent = root.transform;

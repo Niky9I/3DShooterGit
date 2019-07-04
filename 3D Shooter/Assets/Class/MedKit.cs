@@ -15,17 +15,15 @@ namespace Geekbrains
             print("МЕНЯ ПОДОБРАЛИ");
             if ((collision.tag == "Bot") || (collision.tag == "Player"))
             {
-                SetHealth(collision.gameObject.GetComponent<ISetHealth>());
+                SetHealth(collision.gameObject.GetComponentInParent<ISetHealth>());
                 Destroy(InstanceObject);
             }
         }
 
         private void SetHealth(ISetHealth obj)
         {
-            //print("ОЗДОРАВЛИВАЕМСЯ!");
             if (obj != null)
             {
-                print("ОЗДОРАВЛИВАЕМСЯ!");
                 obj.ApplyMedKit(Random.Range(_minKit, _maxKit));
             }
         }
